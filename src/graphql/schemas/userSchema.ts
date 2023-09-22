@@ -20,27 +20,14 @@ type User {
     createdAt: String
     enabled: Boolean
   }
-  type UpdateUserResponse {
+  type ShowUserResponse {
     status: Status
     updatedUser: UserData
   }
   
-  type ListAllUserResponse {
-    success: Boolean
-    msg: String
-    totalCount: Int
-    users: [UserData]
-  }
-  
   type Query {
     loginUserWithEmail(email: String!, password: String!): TokenResponse
-    listAllUsers(
-      page: Int
-      limit: Int
-      verifiedUser: Boolean
-      search: String
-    ): ListAllUserResponse
-    showUser(userId: String): UpdateUserResponse
+    showUser(userId: String): ShowUserResponse
   }
   
   type Mutation {
@@ -49,13 +36,12 @@ type User {
       password: String!
       name: String!
     ): Status
-    changeUserPassword(
-      currentPassword: String!
-      newPassword: String!
-      confirmNewPassword: String!
-    ): TokenResponse
-    deleteUser(userId: String!): Status
-    updateUser(userId: String, name: String): UpdateUserResponse
+    createAdmin(
+      email:String!
+      password:String!
+      name:String!
+      secretKey:String!
+    ):Status
   }  
 `
 export default typeDefs

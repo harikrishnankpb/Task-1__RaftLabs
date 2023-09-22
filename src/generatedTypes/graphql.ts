@@ -16,60 +16,31 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type ListAllUserResponse = {
-  __typename?: 'ListAllUserResponse';
-  msg?: Maybe<Scalars['String']['output']>;
-  success?: Maybe<Scalars['Boolean']['output']>;
-  totalCount?: Maybe<Scalars['Int']['output']>;
-  users?: Maybe<Array<Maybe<UserData>>>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  changeUserPassword?: Maybe<TokenResponse>;
-  deleteUser?: Maybe<Status>;
+  createAdmin?: Maybe<Status>;
   registerUserWithEmail?: Maybe<Status>;
-  updateUser?: Maybe<UpdateUserResponse>;
 };
 
 
-export type MutationChangeUserPasswordArgs = {
-  confirmNewPassword: Scalars['String']['input'];
-  currentPassword: Scalars['String']['input'];
-  newPassword: Scalars['String']['input'];
-};
-
-
-export type MutationDeleteUserArgs = {
-  userId: Scalars['String']['input'];
+export type MutationCreateAdminArgs = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  secretKey: Scalars['String']['input'];
 };
 
 
 export type MutationRegisterUserWithEmailArgs = {
   email: Scalars['String']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
   password: Scalars['String']['input'];
-};
-
-
-export type MutationUpdateUserArgs = {
-  name?: InputMaybe<Scalars['String']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  listAllUsers?: Maybe<ListAllUserResponse>;
   loginUserWithEmail?: Maybe<TokenResponse>;
-  showUser?: Maybe<UpdateUserResponse>;
-};
-
-
-export type QueryListAllUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  verifiedUser?: InputMaybe<Scalars['Boolean']['input']>;
+  showUser?: Maybe<ShowUserResponse>;
 };
 
 
@@ -83,6 +54,12 @@ export type QueryShowUserArgs = {
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ShowUserResponse = {
+  __typename?: 'ShowUserResponse';
+  status?: Maybe<Status>;
+  updatedUser?: Maybe<UserData>;
+};
+
 export type Status = {
   __typename?: 'Status';
   msg?: Maybe<Scalars['String']['output']>;
@@ -94,12 +71,6 @@ export type TokenResponse = {
   msg?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
   token?: Maybe<Scalars['String']['output']>;
-};
-
-export type UpdateUserResponse = {
-  __typename?: 'UpdateUserResponse';
-  status?: Maybe<Status>;
-  updatedUser?: Maybe<UserData>;
 };
 
 export type User = {
@@ -193,13 +164,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-  ListAllUserResponse: ResolverTypeWrapper<ListAllUserResponse>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  ShowUserResponse: ResolverTypeWrapper<ShowUserResponse>;
   Status: ResolverTypeWrapper<Status>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   TokenResponse: ResolverTypeWrapper<TokenResponse>;
-  UpdateUserResponse: ResolverTypeWrapper<UpdateUserResponse>;
   User: ResolverTypeWrapper<User>;
   UserData: ResolverTypeWrapper<UserData>;
 };
@@ -208,36 +178,30 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Int: Scalars['Int']['output'];
-  ListAllUserResponse: ListAllUserResponse;
   Mutation: {};
   Query: {};
+  ShowUserResponse: ShowUserResponse;
   Status: Status;
   String: Scalars['String']['output'];
   TokenResponse: TokenResponse;
-  UpdateUserResponse: UpdateUserResponse;
   User: User;
   UserData: UserData;
 };
 
-export type ListAllUserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListAllUserResponse'] = ResolversParentTypes['ListAllUserResponse']> = {
-  msg?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  totalCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserData']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  changeUserPassword?: Resolver<Maybe<ResolversTypes['TokenResponse']>, ParentType, ContextType, RequireFields<MutationChangeUserPasswordArgs, 'confirmNewPassword' | 'currentPassword' | 'newPassword'>>;
-  deleteUser?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'userId'>>;
-  registerUserWithEmail?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType, RequireFields<MutationRegisterUserWithEmailArgs, 'email' | 'password'>>;
-  updateUser?: Resolver<Maybe<ResolversTypes['UpdateUserResponse']>, ParentType, ContextType, Partial<MutationUpdateUserArgs>>;
+  createAdmin?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType, RequireFields<MutationCreateAdminArgs, 'email' | 'name' | 'password' | 'secretKey'>>;
+  registerUserWithEmail?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType, RequireFields<MutationRegisterUserWithEmailArgs, 'email' | 'name' | 'password'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  listAllUsers?: Resolver<Maybe<ResolversTypes['ListAllUserResponse']>, ParentType, ContextType, Partial<QueryListAllUsersArgs>>;
   loginUserWithEmail?: Resolver<Maybe<ResolversTypes['TokenResponse']>, ParentType, ContextType, RequireFields<QueryLoginUserWithEmailArgs, 'email' | 'password'>>;
-  showUser?: Resolver<Maybe<ResolversTypes['UpdateUserResponse']>, ParentType, ContextType, Partial<QueryShowUserArgs>>;
+  showUser?: Resolver<Maybe<ResolversTypes['ShowUserResponse']>, ParentType, ContextType, Partial<QueryShowUserArgs>>;
+};
+
+export type ShowUserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ShowUserResponse'] = ResolversParentTypes['ShowUserResponse']> = {
+  status?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType>;
+  updatedUser?: Resolver<Maybe<ResolversTypes['UserData']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type StatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['Status'] = ResolversParentTypes['Status']> = {
@@ -250,12 +214,6 @@ export type TokenResponseResolvers<ContextType = any, ParentType extends Resolve
   msg?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateUserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateUserResponse'] = ResolversParentTypes['UpdateUserResponse']> = {
-  status?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType>;
-  updatedUser?: Resolver<Maybe<ResolversTypes['UserData']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -278,12 +236,11 @@ export type UserDataResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type Resolvers<ContextType = any> = {
-  ListAllUserResponse?: ListAllUserResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  ShowUserResponse?: ShowUserResponseResolvers<ContextType>;
   Status?: StatusResolvers<ContextType>;
   TokenResponse?: TokenResponseResolvers<ContextType>;
-  UpdateUserResponse?: UpdateUserResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserData?: UserDataResolvers<ContextType>;
 };
