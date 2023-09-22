@@ -1,0 +1,27 @@
+{
+  "name": "task-1",
+  "version": "1.0.0",
+  "description": "RaftLabs-task1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch src --ignore dist --ext ts,graphql --exec 'etsc && node ./dist/index.js'",
+    "build": "etsc"
+  },
+  "author": "Harikrishnan KP",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^3.12.1",
+    "esbuild": "^0.19.3",
+    "express": "^4.18.2",
+    "graphql": "^16.8.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.2",
+    "redis": "^4.6.9"
+  },
+  "devDependencies": {
+    "esbuild-node-tsc": "^2.0.5",
+    "nodemon": "^3.0.1",
+    "typescript": "^5.2.2"
+  }
+}
