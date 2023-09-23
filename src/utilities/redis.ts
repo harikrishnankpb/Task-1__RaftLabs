@@ -1,6 +1,8 @@
 require('dotenv').config();
 import { createClient } from "redis";
 
+
+//Redis client is created and exported .
 export let redisClient: any
 
 export const connect = async () => {
@@ -12,3 +14,4 @@ export const connect = async () => {
     })
     await redisClient.connect();
 }
+

@@ -7,16 +7,14 @@ import cors from 'cors'
 import schema from './graphql/schemaMap'
 import { connect } from './utilities/redis'
 
-connect()
-setTimeout(async () => {
-}, 2000);
+connect()  // To connect Redis
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-
+//Function to start Apollo Server
 async function startApolloServer() {
     const server = new ApolloServer({
         schema,
@@ -36,4 +34,5 @@ async function startApolloServer() {
     console.log(`🚀 Server ready at http://localhost:8080${server.graphqlPath}`);
     return { server, app };
 }
+//In here ,Connect to MongoDB and start Apollo Server when the connection is established
 mongoose.connect(process.env.DB || '').then(startApolloServer)

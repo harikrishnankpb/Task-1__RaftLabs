@@ -9,6 +9,8 @@ import { isValidObjectId } from "mongoose";
 import validator from 'validator';
 
 export default {
+
+    /* Used to Create Normal user */
     async registerUserWithEmail(_: void, data: MutationRegisterUserWithEmailArgs): Promise<Status> {
         try {
             let email = data.email;
@@ -40,6 +42,8 @@ export default {
             }
         }
     },
+
+    /* Used to Create Admin user . Need to pass additional secret key .This is created only for temporary purpose */
     async createAdmin(_: void, data: MutationCreateAdminArgs): Promise<Status> {
         try {
             let email = data.email;
@@ -75,6 +79,8 @@ export default {
             }
         }
     },
+
+    /* Used to Update user . User id and name need to pass */
     async updateUser(_: void, data: MutationUpdateUserArgs, { req }: ExpressType): Promise<ShowUserResponse> {
         let token: any = req.headers.token || '';
         let userInfo = await auth(token, 1);

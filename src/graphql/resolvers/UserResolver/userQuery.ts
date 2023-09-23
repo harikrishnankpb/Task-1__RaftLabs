@@ -15,6 +15,8 @@ interface UserDatas {
 }
 
 export default {
+
+    /* Login for both normal user and admin */
     async loginUserWithEmail(_: void, data: QueryLoginUserWithEmailArgs): Promise<TokenResponse> {
         try {
             let dbUser: UserDatas | null = await User.findOne({ email: data.email })
@@ -42,6 +44,8 @@ export default {
             }
         }
     },
+
+    /* Used to show user data , by passing user email .  In here I used Redis for Caching */
     async showUser(_: void, input: QueryShowUserArgs, { req }: ExpressType): Promise<ShowUserResponse> {
         let token: any = req.headers.token || '';
         let userInfo = await auth(token, 1);
