@@ -1,9 +1,11 @@
-import { QueryLoginUserWithEmailArgs, TokenResponse } from "@generatedTypes";
+import { QueryLoginUserWithEmailArgs, QueryShowUserArgs, ShowUserResponse, TokenResponse, UserData } from "@generatedTypes";
 import User from "../../../models/user";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
+import { ExpressType } from "generatedTypes/commonTypes";
+import auth from "../../../utilities/auth";
 
-interface UserData {
+interface UserDatas {
     _id: string;
     name: string;
     email: string;
@@ -14,7 +16,7 @@ interface UserData {
 export default {
     async loginUserWithEmail(_: void, data: QueryLoginUserWithEmailArgs): Promise<TokenResponse> {
         try {
-            let dbUser: UserData | null = await User.findOne({ email: data.email })
+            let dbUser: UserDatas | null = await User.findOne({ email: data.email })
             if (!dbUser)
                 return {
                     success: false,
@@ -39,5 +41,43 @@ export default {
                 msg: "Something went wrong"
             }
         }
-    }
+    },
+    async showUser(_: void, input: QueryShowUserArgs, { req }: ExpressType): Promise<ShowUserResponse> {
+        let token: any = req.headers.token || '';
+        let userInfo = await auth(token, 1);
+        try {
+            let email = input.email
+            console.log(email)
+            let user: UserData | null
+            if (userInfo.role > 1 && email) {
+                user = await User.findOne({ email }).select('-password').lean();
+            }
+            else {
+                user = await User.findById(userInfo._id).select('-password').lean();
+            }
+            if (!user) {
+                return {
+                    status: {
+                        success: false,
+                        msg: "User not found"
+                    }
+                }
+            }
+            return {
+                status: {
+                    success: true,
+                    msg: "Success"
+                },
+                userData: user
+            }
+        } catch (error) {
+            console.log("Error:", error);
+            return {
+                status: {
+                    success: false,
+                    msg: "Something went wrong"
+                }
+            }
+        }
+    },
 }

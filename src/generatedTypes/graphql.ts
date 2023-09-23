@@ -51,13 +51,13 @@ export type QueryLoginUserWithEmailArgs = {
 
 
 export type QueryShowUserArgs = {
-  userId?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
 };
 
 export type ShowUserResponse = {
   __typename?: 'ShowUserResponse';
   status?: Maybe<Status>;
-  updatedUser?: Maybe<UserData>;
+  userData?: Maybe<UserData>;
 };
 
 export type Status = {
@@ -195,12 +195,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   loginUserWithEmail?: Resolver<Maybe<ResolversTypes['TokenResponse']>, ParentType, ContextType, RequireFields<QueryLoginUserWithEmailArgs, 'email' | 'password'>>;
-  showUser?: Resolver<Maybe<ResolversTypes['ShowUserResponse']>, ParentType, ContextType, Partial<QueryShowUserArgs>>;
+  showUser?: Resolver<Maybe<ResolversTypes['ShowUserResponse']>, ParentType, ContextType, RequireFields<QueryShowUserArgs, 'email'>>;
 };
 
 export type ShowUserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ShowUserResponse'] = ResolversParentTypes['ShowUserResponse']> = {
   status?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType>;
-  updatedUser?: Resolver<Maybe<ResolversTypes['UserData']>, ParentType, ContextType>;
+  userData?: Resolver<Maybe<ResolversTypes['UserData']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

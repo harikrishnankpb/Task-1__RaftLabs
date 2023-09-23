@@ -18,16 +18,15 @@ type User {
     name: String
     role: Int
     createdAt: String
-    enabled: Boolean
   }
   type ShowUserResponse {
     status: Status
-    updatedUser: UserData
+    userData: UserData
   }
   
   type Query {
     loginUserWithEmail(email: String!, password: String!): TokenResponse
-    showUser(userId: String): ShowUserResponse
+    showUser(email: String): ShowUserResponse
   }
   
   type Mutation {
