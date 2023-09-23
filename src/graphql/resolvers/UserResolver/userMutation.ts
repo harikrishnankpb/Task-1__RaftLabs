@@ -46,7 +46,13 @@ export default {
             if (!process.env.ADMIN_SECRET_KEY || data.secretKey != process.env.ADMIN_SECRET_KEY) return ({
                 success: false,
                 msg: "Invalid secret key"
-            })
+            });
+            if (!data.email || !data.password || !data.name || !data.password.match(/^\S{6,15}$/) || !validator.isEmail(data.email)) {
+                return {
+                    msg: "Invalid Input",
+                    success: false,
+                }
+            };
             let exist = await User.exists({ email })
             if (exist)
                 return {
