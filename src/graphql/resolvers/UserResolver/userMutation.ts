@@ -6,6 +6,7 @@ import auth from "../../../utilities/auth";
 
 import { updateUserRedis } from './userHelper'
 import { isValidObjectId } from "mongoose";
+import validator from 'validator';
 
 export default {
     async registerUserWithEmail(_: void, data: MutationRegisterUserWithEmailArgs): Promise<Status> {
@@ -17,6 +18,12 @@ export default {
                     success: false,
                     msg: 'Email already been taken'
                 }
+            if (!data.email || !data.password || !data.name || !data.password.match(/^\S{6,15}$/) || !validator.isEmail(data.email)) {
+                return {
+                    msg: "Invalid Input",
+                    success: false,
+                }
+            };
             let userData: any = data
             userData.role = 1;
             userData.password = await bcrypt.hash(data.password, 10);
