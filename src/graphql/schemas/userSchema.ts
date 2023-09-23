@@ -41,6 +41,7 @@ type User {
       name:String!
       secretKey:String!
     ):Status
+    updateUser(userId: String!, name: String!): ShowUserResponse
   }  
 `
 export default typeDefs

@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { ExpressType } from "generatedTypes/commonTypes";
 import auth from "../../../utilities/auth";
-import { redisClient } from "../../../utilities/redis";
 import { getUserDataFromRedis } from './userHelper'
 
 interface UserDatas {

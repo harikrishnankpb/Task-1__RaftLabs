@@ -1,6 +1,11 @@
-import { MutationCreateAdminArgs, MutationRegisterUserWithEmailArgs, Status } from "@generatedTypes";
+import { MutationCreateAdminArgs, MutationRegisterUserWithEmailArgs, MutationUpdateUserArgs, ShowUserResponse, Status, UserData } from "@generatedTypes";
 import User from "../../../models/user";
 import bcrypt from 'bcrypt'
+import { ExpressType } from "generatedTypes/commonTypes";
+import auth from "../../../utilities/auth";
+
+import { updateUserRedis } from './userHelper'
+import { isValidObjectId } from "mongoose";
 
 export default {
     async registerUserWithEmail(_: void, data: MutationRegisterUserWithEmailArgs): Promise<Status> {
@@ -57,4 +62,62 @@ export default {
             }
         }
     },
+    async updateUser(_: void, data: MutationUpdateUserArgs, { req }: ExpressType): Promise<ShowUserResponse> {
+        let token: any = req.headers.token || '';
+        let userInfo = await auth(token, 1);
+        try {
+            let user: UserData | null;
+            if (!data.userId || !isValidObjectId(data.userId)) {
+                return {
+                    status: {
+                        success: false,
+                        msg: "Invalid objectId"
+                    }
+                }
+            }
+            let userId;
+            if (userInfo.role === 1) {
+                if (userInfo._id != data.userId) {
+                    return {
+                        status: {
+                            success: false,
+                            msg: "Don't have privilege"
+                        }
+                    }
+                }
+                userId = userInfo._id
+            }
+            if (userInfo.role > 1 && data.userId) {
+                userId = data.userId;
+            }
+            user = await User.findByIdAndUpdate(
+                userId,
+                { name: data.name },
+                { new: true }
+            ).select('-password').lean();
+            if (!user) return {
+                status: {
+                    success: false,
+                    msg: "User not found"
+                }
+            }
+            await updateUserRedis(user);
+            return {
+                status: {
+                    success: true,
+                    msg: "Success"
+                },
+                userData: user
+            }
+        } catch (error) {
+            console.log("Error:", error);
+            return {
+                status: {
+                    success: false,
+                    msg: "Something went wrong"
+                }
+            }
+        }
+    },
+
 }

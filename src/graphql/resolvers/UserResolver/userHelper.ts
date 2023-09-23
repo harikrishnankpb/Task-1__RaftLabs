@@ -21,3 +21,9 @@ export const getUserDataFromRedis = async (email: string): Promise<UserData | nu
         return data;
     }
 }
+export const updateUserRedis = async (user: UserData) => {
+    const key = `user:${user.email}`;
+    redisClient.set(key, JSON.stringify(user), {
+        EX: 3600
+    });
+}
