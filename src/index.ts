@@ -3,15 +3,13 @@ require('dotenv').config()
 import express, { Request, Response } from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import mongoose from 'mongoose'
-import path from 'path'
 import cors from 'cors'
 import schema from './graphql/schemaMap'
-import bcrypt from 'bcrypt'
+import { connect } from './utilities/redis'
 
-// import { connect } from './funs/redis'
-// connect()
-// setTimeout(async () => {
-// }, 2000);
+connect()
+setTimeout(async () => {
+}, 2000);
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -20,7 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 
 
 async function startApolloServer() {
-    // require('./funs/algolia').reCrawl()
     const server = new ApolloServer({
         schema,
         context: ({ req, res }: { req: Request, res: Response }) => ({ req, res })

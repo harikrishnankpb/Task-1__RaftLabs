@@ -22,7 +22,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^7.5.2",
-    "redis": "^4.6.9"
+    "redis": "^4.6.10"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",

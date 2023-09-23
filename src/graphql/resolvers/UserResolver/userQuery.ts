@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { ExpressType } from "generatedTypes/commonTypes";
 import auth from "../../../utilities/auth";
+import { redisClient } from "../../../utilities/redis";
+import { getUserDataFromRedis } from './userHelper'
 
 interface UserDatas {
     _id: string;
@@ -22,14 +24,13 @@ export default {
                     success: false,
                     msg: "Invalid email or password"
                 }
-            console.log(dbUser)
             if (!await bcrypt.compare(data.password, (dbUser.password || '')))
                 return {
                     success: false,
                     msg: "Invalid email or password"
                 }
             let maxExp = '10d'
-            let token = jwt.sign({ _id: dbUser._id, logged: 'email', email: dbUser.email, role: dbUser.role }, process.env.JWT_SECRET || '', { expiresIn: maxExp })
+            let token = jwt.sign({ _id: dbUser._id, email: dbUser.email, role: dbUser.role }, process.env.JWT_SECRET || '', { expiresIn: maxExp })
             return {
                 success: true,
                 token,
@@ -50,10 +51,10 @@ export default {
             console.log(email)
             let user: UserData | null
             if (userInfo.role > 1 && email) {
-                user = await User.findOne({ email }).select('-password').lean();
+                user = await getUserDataFromRedis(email);
             }
             else {
-                user = await User.findById(userInfo._id).select('-password').lean();
+                user = await getUserDataFromRedis(userInfo.email);
             }
             if (!user) {
                 return {

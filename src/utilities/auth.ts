@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken";
 interface UserData {
     _id: string | null;
     role: number;
-    name?: string;
-    logged?: boolean;
+    email: string;
 }
 
 /*
@@ -19,7 +18,7 @@ export default async function auth(token: string, minRole: number): Promise<User
     if (minRole == 0) return {
         _id: null,
         role: 0,
-        logged: false
+        email: ''
     }
     let secret = process.env.JWT_SECRET || '';
     let data: any;
